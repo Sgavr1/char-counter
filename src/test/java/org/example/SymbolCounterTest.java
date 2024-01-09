@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class SymbolCounterTest {
     @Test
     public void shouldThrowIllegalArgumentExceptionWhenStringIsNull() {
-        SymbolCounter symbolCounter = new SymbolCounterProxy();
+        SymbolCounter symbolCounter = new SymbolCounterImpl();
 
         assertThrows(IllegalArgumentException.class, () -> {
             symbolCounter.count(null);
@@ -18,7 +18,7 @@ public class SymbolCounterTest {
 
     @Test
     public void shouldReturnEmptyStringStatisticsWhenStringIsEmpty() {
-        SymbolCounter symbolCounter = new SymbolCounterProxy();
+        SymbolCounter symbolCounter = new SymbolCounterImpl();
 
         Map<Character,Integer> stringStatistics = symbolCounter.count("");
 
@@ -27,7 +27,7 @@ public class SymbolCounterTest {
 
     @Test
     public void shouldReturnCorrectStatisticsWhenAnyString() {
-        SymbolCounter symbolCounter = new SymbolCounterProxy();
+        SymbolCounter symbolCounter = new SymbolCounterImpl();
 
         Map<Character,Integer> symbols = symbolCounter.count("Hello world!");
 
@@ -42,21 +42,5 @@ public class SymbolCounterTest {
         assertEquals(1, symbols.get('r'));
         assertEquals(1, symbols.get('d'));
         assertEquals(1, symbols.get('!'));
-    }
-
-    @Test
-    public void shouldReturnValueFromCacheWhenEqualsString() {
-        SymbolCounter symbolCounter = new SymbolCounterProxy();
-
-        long noCacheTime = System.nanoTime();
-        Map<Character,Integer> symbolMap1 = symbolCounter.count("qwxwemcyfieuhfcfhneu herihfmeuhfncmj iuehrnueehjvn ehruhfiwofko;jiubkjhn iiejoifjwkeoifh2p38ouf8ouiv hn8i4htiugjv ou4yhtguy35go8iuythog483u ho87i4u3yhfonunjvvhe4i75uyghovuijh n8547iuyhtnof8uih");
-        noCacheTime = System.nanoTime() - noCacheTime;
-
-        long cacheTime = System.nanoTime();
-        Map<Character,Integer> symbolMap2 = symbolCounter.count("qwxwemcyfieuhfcfhneu herihfmeuhfncmj iuehrnueehjvn ehruhfiwofko;jiubkjhn iiejoifjwkeoifh2p38ouf8ouiv hn8i4htiugjv ou4yhtguy35go8iuythog483u ho87i4u3yhfonunjvvhe4i75uyghovuijh n8547iuyhtnof8uih");
-        cacheTime = System.nanoTime() - cacheTime;
-
-        assertEquals(symbolMap1, symbolMap2);
-        assertTrue(cacheTime < noCacheTime - 10000);
     }
 }

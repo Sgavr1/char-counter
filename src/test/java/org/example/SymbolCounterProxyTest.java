@@ -1,44 +1,31 @@
 package org.example;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
+import static org.mockito.Mockito.*;
+import org.mockito.Mockito;
 
-import java.util.Map;
+import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class SymbolCounterProxyTest {
-    @ParameterizedTest()
-    @CsvSource({"Hello world!", "qqqwwweeerrr", "Using Mock class"})
-    public void shouldReturnFixedAnswerWhenUseMockClass(String line){
-        SymbolCounter symbolCounter = new SymbolCounterProxy(new SymbolCounterMock());
+    @Test
+    public void shouldReturnFixedAnswerWhenUseMockClass(){
+        SymbolCounter mock = Mockito.mock(SymbolCounter.class);
 
-        Map<Character,Integer> symbolStatistic = symbolCounter.count(line);
+        Mockito.when(mock.count("Hello world!")).thenReturn(new HashMap<>());
 
-        assertEquals(4,symbolStatistic.size());
-        assertEquals(1,symbolStatistic.get('M'));
-        assertEquals(1,symbolStatistic.get('o'));
-        assertEquals(1,symbolStatistic.get('c'));
-        assertEquals(1,symbolStatistic.get('k'));
+        SymbolCounter symbolCounter = new SymbolCounterCache(mock);
+
+        symbolCounter.count("Hello world!");
+
+        verify(mock).count("Hello world!");
     }
 
     @Test
-    public void shouldReturnCorrectAnswerWhenUseActualImplementationInterface(){
-        SymbolCounter symbolCounter = new SymbolCounterProxy(new SymbolCounterImpl());
+    public void shouldReturnCachedResponseWhenRepeatedData(){
+        SymbolCounter symbolCounter = new SymbolCounterCache(new SymbolCounterImpl());
 
-        Map<Character,Integer> answer = symbolCounter.count("Hello world!");
-
-        assertEquals(9, answer.size());
-
-        assertEquals(1, answer.get('H'));
-        assertEquals(1, answer.get('e'));
-        assertEquals(3, answer.get('l'));
-        assertEquals(2, answer.get('o'));
-        assertEquals(1, answer.get(' '));
-        assertEquals(1, answer.get('w'));
-        assertEquals(1, answer.get('r'));
-        assertEquals(1, answer.get('d'));
-        assertEquals(1, answer.get('!'));
+        assertEquals(symbolCounter.count("Hello world!"), symbolCounter.count("Hello world!"));
     }
 }

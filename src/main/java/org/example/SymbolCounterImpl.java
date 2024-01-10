@@ -13,13 +13,13 @@ public class SymbolCounterImpl implements SymbolCounter {
         Map<Character,Integer> symbols = new HashMap<>();
 
         for (char c : line.toCharArray()) {
-            Integer symbolCounter = symbols.get(c);
+            Integer symbolCount = symbols.get(c);
 
-            if (symbolCounter == null) {
-                symbolCounter = 0;
+            if (symbolCount == null) {
+                symbolCount = 0;
             }
 
-            symbols.put(c,symbolCounter + 1);
+            symbols.put(c, symbolCount + 1);
         }
 
         return symbols;

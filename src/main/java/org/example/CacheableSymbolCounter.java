@@ -3,10 +3,10 @@ package org.example;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SymbolCounterCache implements SymbolCounter {
+public class CacheableSymbolCounter implements SymbolCounter {
     private final SymbolCounter symbolCounter;
     private final Map<String,Map<Character,Integer>> cachedValues;
-    public SymbolCounterCache(SymbolCounter symbolCounter) {
+    public CacheableSymbolCounter(SymbolCounter symbolCounter) {
         this.symbolCounter = symbolCounter;
         cachedValues = new HashMap<>();
     }
@@ -20,9 +20,9 @@ public class SymbolCounterCache implements SymbolCounter {
             return cachedValue;
         }
 
-        cachedValue = symbolCounter.count(line);
-        cachedValues.put(line, cachedValue);
+        Map<Character, Integer> response = symbolCounter.count(line);
+        cachedValues.put(line, response);
 
-        return cachedValue;
+        return response;
     }
 }
